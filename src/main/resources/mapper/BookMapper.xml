@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.dao.BookDao">
+    <resultMap id="rm" type="com.qf.domain.Book">
+        <id property="bookId" column="book_id"></id>
+        <result property="bookSubtitle" column="book_subtitle"></result>
+        <result property="booKeditRecomend" column="book_edit_recomend"></result>
+        <result property="bookSprice" column="book_sprice"></result>
+        <result property="bookTime" column="book_time"></result>
+        <result property="bookAuthor" column="book_author"></result>
+        <result property="bookData" column="book_data"></result>
+        <result property="bookContent" column="book_content"></result>
+        <result property="bookPublisher" column="book_publisher"></result>
+        <result property="bookPublisherIntro" column="book_publisher_intro"></result>
+        <result property="bookIntro" column="book_intro"></result>
+        <result property="bookTts" column="book_tts"></result>
+        <result property="bookType" column="book_type"></result>
+        <result property="type" column="type"></result>
+        <result property="bookImgUrl" column="book_img_url"></result>
+        <result property="bookClassId" column="book_class_id"></result>
+        <association property="bd" javaType="ClassIfications">
+            <id property="classificationid" column="classification_id"></id>
+            <result property="classification" column="classification"></result>
+        </association>
+    </resultMap>
+    <select id="findAll" resultMap="rm">
+        select * from e_books
+    </select>
+    <select id="findType" resultMap="rm">
+        select * from e_books where book_Type=#{bookType}
+    </select>
+    <select id="findS2" resultMap="rm">
+        SELECT * FROM e_books WHERE book_class_id=(SELECT classification_id FROM classifications WHERE classification=#{classification})
+    </select>
+    <select id="findSujectsByName" resultMap="rm">
+         SELECT * FROM e_books WHERE book_class_id in (SELECT classification_id FROM classifications WHERE sub_id=(SELECT subject_id FROM subjects WHERE SUBJECT=#{subject}))
+    </select>
+
+
+    <select id="findAllBook" resultMap="rm">
+        SELECT * FROM e_books
+    </select>
+    <select id="selectRows" resultType="int">
+        SELECT COUNT(*) FROM e_books
+    </select>
+    <insert id="addBook" parameterType="book">
+        INSERT INTO e_books(book_subtitle,book_edit_recomend,book_sprice,book_time,book_author,book_data,book_content,book_publisher,book_publisher_intro,book_intro,book_tts,book_type,book_img_url,book_class_id,book_author_info,TYPE) VALUES
+        (#{bookSubtitle},#{booKeditRecomend},#{bookSprice},#{bookTime},#{bookAuthor},#{bookData},#{bookContent},#{bookPublisher},#{bookPublisherIntro},#{bookIntro},#{bookTts},#{bookType},#{bookImgUrl},#{bookClassId},#{bookAuthorInfo},#{type})
+    </insert>
+    <delete id="deleteBook" parameterType="int">
+        DELETE FROM e_books WHERE book_id=#{bookId}
+    </delete>
+
+    <select id="findBookById" resultMap="rm" parameterType="int">
+        SELECT * FROM e_books WHERE book_id=#{bookId}
+    </select>
+    <update id="updateBook" parameterType="book">
+        UPDATE e_books
+        <set>
+            <trim suffixOverrides=",">
+                <if test="bookSubtitle!=null">
+                    book_subtitle=#{bookSubtitle},
+                </if>
+                <if test="booKeditRecomend!=null">
+                    book_edit_recomend=#{booKeditRecomend},
+                </if>
+                <if test="bookSprice!=null">
+                    book_sprice=#{bookSprice},
+                </if>
+                <if test="bookTime!=null">
+                    book_time=#{bookTime},
+                </if>
+                <if test="bookAuthor!=null">
+                    book_author=#{bookAuthor},
+                </if>
+                <if test="bookData!=null">
+                    book_data=#{bookData},
+                </if>
+                <if test="bookContent!=null">
+                    book_content=#{bookContent},
+                </if>
+                <if test="bookPublisher!=null">
+                    book_publisher=#{bookPublisher},
+                </if>
+                <if test="bookPublisherIntro!=null">
+                    book_publisher_intro=#{bookPublisherIntro},
+                </if>
+                <if test="bookIntro!=null">
+                    book_intro=#{bookIntro},
+                </if>
+                <if test="bookTts!=null">
+                    book_tts=#{bookTts},
+                </if>
+                <if test="bookType!=null">
+                    book_type=#{bookType},
+                </if>
+                <if test="bookImgUrl!=null">
+                    book_img_url=#{bookImgUrl},
+                </if>
+            </trim>
+        </set>
+        <where>
+            book_id=#{bookId}
+        </where>
+    </update>
+</mapper>

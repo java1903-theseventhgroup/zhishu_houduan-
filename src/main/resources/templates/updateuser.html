@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/doc.min.css">
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor:pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="user.html">知书后台管理系统</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user" id="cc"></i><span id="b"></span><span> class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/loginout"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <div class="tree">
+                <ul style="padding-left:0px;" class="list-group">
+                    <li class="list-group-item">
+                        <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 管理页 <span class="badge" style="float:right">5</span></span>
+                        <ul style="margin-top:10px;">
+                            <li style="height:30px;">
+                                <a href="/user/findAllUser" style="color:red;"><i class="glyphicon glyphicon-user"></i> 用户维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="/adminLogin"><i class="glyphicon glyphicon-certificate"></i> 管理维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="/listen/loadAll"><i class="glyphicon glyphicon-volume-up"></i> 听书维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="/Course/findAll"><i class="glyphicon glyphicon-list-alt"></i> 课程维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="/findAllBook"><i class="glyphicon glyphicon-book"></i> 电子书维护</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <ol class="breadcrumb">
+                <li><a href="main.html">首页</a></li>
+                <li><a href="user.html">用户维护</a></li>
+                <li class="active">修改</li>
+            </ol>
+            <div class="panel panel-default">
+                <div class="panel-heading">表单数据<div st yle="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
+                <div class="panel-body">
+                    <form role="form" action="/user/updateUser" method="post">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">状态</label>
+                            <input type="hidden" name="id" id="id" th:value="${u.id}">
+                            <input type="text" class="form-control" id="status" name="status" th:value="${u.status}">
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-edit"></i> 修改</button>
+                        <a href="/user/findAllUser"><button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 取消</button></a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">帮助</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bs-callout bs-callout-info">
+                    <h4>测试标题1</h4>
+                    <p>测试内容1，测试内容1，测试内容1，测试内容1，测试内容1，测试内容1</p>
+                </div>
+                <div class="bs-callout bs-callout-info">
+                    <h4>测试标题2</h4>
+                    <p>测试内容2，测试内容2，测试内容2，测试内容2，测试内容2，测试内容2</p>
+                </div>
+            </div>
+            <!--
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+<script src="../static/jquery/jquery-2.1.1.min.js"></script>
+<script src="../static/bootstrap/js/bootstrap.min.js"></script>
+<script src="../static/script/docs.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var userName=sessionStorage.getItem("userName");
+        $("#cc").text(userName);
+        $(".list-group-item").click(function(){
+            if ( $(this).find("ul") ) {
+                $(this).toggleClass("tree-closed");
+                if ( $(this).hasClass("tree-closed") ) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+        $.post("getUser",function (user) {
+            $('#id').val(user.userId);
+            $('#name').val(user.userName);
+            $('#pwd').val(user.userPwd);
+            $('#email').val(user.userEmail);
+        })
+        $('#update').click(function () {
+           var id=$('#id').val();
+           var name=$('#name').val();
+           var pass=$('#pass').val();
+           var positions=$('#positions').val();
+
+            $.post("/updateAdmin",
+                  {"id":id,"name":name,"pass":pass,"positions":positions},
+                    function (date) {
+                        if(date==1){
+                            alert("修改完成")
+                            location.href="adminLogin";
+                        }else {
+                            alert("出错了，请重试");
+                        }
+                    });
+        });
+        $.ajax({
+            type : "post",
+            url : "/loginnames",
+            datatype:"json",
+            success : function(data) {
+                $("#b").html(data);
+            }
+        });
+    });
+</script>
+</body>
+</html>

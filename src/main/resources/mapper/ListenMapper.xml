@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.dao.ListenDao">
+    <resultMap id="rm" type="com.qf.domain.Listen">
+        <id property="listenId" column="listen_id"></id>
+        <result property="listenSubtitle" column="listen_subtitle"></result>
+        <result property="listenPrice" column="listen_price"></result>
+        <result property="listenAudioTime" column="listen_audio_time"></result>
+        <result property="listenAuthor" column="listen_author"></result>
+        <result property="listenContent" column="listen_content"></result>
+        <result property="listenPublisherIntro" column="listen_publisher_intro"></result>
+        <result property="listenAudioIntro" column="listen_audio_intro"></result>
+        <result property="listenAuthorPhoto" column="listen_author_photo"></result>
+        <result property="listenAuthorValidity" column="listen_author_validity"></result>
+        <result property="listenCount" column="listen_count"></result>
+        <result property="listenType" column="listen_type"></result>
+        <result property="listenAudio" column="listen_audio"></result>
+        <result property="listenImgUrl" column="listen_img_url"></result>
+        <result property="listenClassId" column="listen_class_id"></result>
+        <result property="type" column="type"></result>
+    </resultMap>
+    <select id="findS21" resultMap="rm">
+        SELECT * FROM listen WHERE listen_class_id=(SELECT classification_id FROM classifications WHERE classification=#{classification})
+    </select>
+    <select id="findSujectsByName" resultMap="rm">
+         SELECT * FROM listen WHERE listen_class_id in (SELECT classification_id FROM classifications WHERE sub_id=(SELECT subject_id FROM subjects WHERE SUBJECT=#{SUBJECT}))
+    </select>
+
+    <!--    查询全部听书-->
+    <select id="loadAll" resultMap="rm">
+        select * from listen
+    </select>
+        <!--查询总行数-->
+    <select id="selectRows" resultType="int">
+    select count(*) from listen
+    </select>
+    
+    <select id="selsctByListenType" parameterType="String" resultMap="rm">
+        select  *  from listen where listen_type=#{listenType}
+    </select>
+
+    <select id="selsctByListenAuthor" parameterType="String" resultMap="rm">
+        select  *  from listen where listen_author=#{listenAuthor}
+    </select>
+    <select id="findByNameOrAuthor"  resultMap="rm">
+        <if test="subject!=null ">
+            <bind name="listenSubtitle" value="'%'+subject+'%'"/>
+        </if>
+        <if test="subject!=null ">
+            <bind name="listenAuthor" value="'%'+subject+'%'"/>
+        </if>
+        select * from listen
+        <where>
+            listen_subtitle like #{listenSubtitle} OR listen_author LIKE #{listenAuthor}
+        </where>
+    </select>
+    <insert id="addListen" parameterType="Listen">
+        insert into listen values (0,#{listenSubtitle},#{listenPrice},#{listenAudioTime},#{listenAuthor},#{listenContent},#{listenPublisherIntro},#{listenAudioIntro},#{listenAuthorPhoto},#{listenAuthorValidity},#{listenCount},#{listenType},#{listenAudio},#{listenImgUrl},#{listenClassId},#{type})
+    </insert>
+    <delete id="deleteListen" parameterType="int">
+        delete from listen where listen_id=#{listenId}
+    </delete>
+    <update id="updateListen" parameterType="listen" >
+        update listen
+        <set>
+            <trim suffixOverrides=",">
+                <if test="listenSubtitle!=null">
+                    listen_subtitle=#{listenSubtitle},
+                </if>
+                <if test="listenPrice>0">
+                    listen_price=#{listenPrice},
+                </if>
+                <if test="listenAudioTime!=null">
+                    listen_audio_time=#{listenAudioTime},
+                </if>
+                <if test="listenAuthor!=null">
+                    listen_author=#{listenAuthor},
+                </if>
+                <if test="listenContent!=null">
+                    listen_content=#{listenContent},
+                </if>
+                <if test="listenPublisherIntro!=null">
+                    listen_publisher_intro=#{listenPublisherIntro},
+                </if>
+                <if test="listenAudioIntro!=null">
+                    listen_audio_intro=#{listenAudioIntro},
+                </if>
+                <if test="listenAuthorPhoto!=null">
+                    listen_author_photo=#{listenAuthorPhoto},
+                </if>
+                <if test="listenAuthorValidity!=null">
+                    listen_author_validity=#{listenAuthorValidity},
+                </if>
+                <if test="listenCount>0">
+                    listen_count=#{listenCount},
+                </if>
+                <if test="listenType!=null">
+                    listen_type=#{listenType},
+                </if>
+                <if test="listenClassId>0">
+                    listen_class_id=#{listenClassId},
+                </if>
+                <if test="type>0">
+                    type=#{type},
+                </if>
+            </trim>
+        </set>
+        <where>
+            listen_id=#{listenId}
+        </where>
+    </update>
+
+    <select id="findListenById" parameterType="int" resultMap="rm">
+        select * from listen where listen_id=#{listenId}
+    </select>
+
+    <update  id="uploadListenImgUrl" parameterType="listen">
+        update listen set  listen_img_url=#{listenImgUrl} where listen_id=#{listenId}
+    </update>
+
+    <update  id="uploadListenAudio" parameterType="listen">
+        update listen set listen_audio=#{listenAudio} where listen_id=#{listenId}
+    </update>
+</mapper>

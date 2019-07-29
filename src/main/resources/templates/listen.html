@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <script src="../static/jquery/jquery-2.1.1.min.js"></script>
+    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../static/script/docs.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $.ajax({
+                type: "post",
+                url: "/loginnames",
+                datatype: "json",
+                success: function (data) {
+                    $("#b").html(data);
+                }
+            });
+
+            $('#all').click(function () {
+                var chs = document.getElementsByName("a")
+                var all = document.getElementById("all");
+                var num = 0;
+                for (var i = 0; i < chs.length; i++) {
+                    chs[i].checked = all.checked;
+                }
+
+
+                $(".list-group-item").click(function () {
+                    if ($(this).find("ul")) {
+                        $(this).toggleClass("tree-closed");
+                        if ($(this).hasClass("tree-closed")) {
+                            $("ul", this).hide("fast");
+                        } else {
+                            $("ul", this).show("fast");
+                        }
+                    }
+                });
+
+                $.ajax({
+                    type: "post",
+                    url: "/loginnames",
+                    datatype: "json",
+                    success: function (data) {
+                        $("#b").html(data);
+                    }
+                });
+
+
+                $("tbody .btn-primary").click(function () {
+                    window.location.href = "edit.html";
+                });
+            });
+        });
+            function delete11(listenId) {
+                var i=confirm("是否要删除？");
+                if (i){
+                    location.href="deleteListen?listenId="+listenId;
+                }
+            }
+
+    </script>
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor:pointer;
+        }
+        table tbody tr:nth-child(odd){background:#F4F4F4;}
+        table tbody td:nth-child(even){color:#C00;}
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="#">知书后台管理系统</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top:8px;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user" id="cc"></i><span id="b"></span><span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/loginout"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li style="margin-left:10px;padding-top:8px;">
+                    <button type="button" class="btn btn-default btn-danger">
+                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
+                    </button>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <div class="tree">
+                <ul style="padding-left:0px;" class="list-group">
+                    <li class="list-group-item tree-closed" >
+                        <a href="/mainview"><i class="glyphicon glyphicon-dashboard"></i> 主页 </a>
+                    </li>
+                    <li class="list-group-item">
+                        <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 管理页 <span class="badge" style="float:right">5</span></span>
+                        <ul style="margin-top:10px;">
+                            <li style="height:30px;">
+                                <a href="/user/findAllUser"><i class="glyphicon glyphicon-user"></i> 用户维护 </a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="/adminLogin"><i class="glyphicon glyphicon-king"></i> 管理维护</a>
+                            </li>
+
+                            <li style="height:30px;">
+                                <a href="/listen/loadAll" style="color:red;"><i class="glyphicon glyphicon-volume-up"></i> 听书维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="/Course/findAll"><i class="glyphicon glyphicon-list-alt"></i> 课程维护</a>
+                            </li>
+                            <li style="height:30px;">
+                                <a href="/findAllBook"><i class="glyphicon glyphicon-book"></i> 电子书维护</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;" id="deleteMore" name="deleteMore"><i class=" glyphicon glyphicon-remove" ></i> 删除</button>
+                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='/addlistenview'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <br>
+                    <hr style="clear:both;">
+                    <div class="table-responsive">
+                        <table id="tab" class="table  table-bordered">
+                            <thead>
+                            <tr >
+                                <th width="30">编号</th>
+                                <th width="30"><input type="checkbox" id="all" name="all"></th>
+                                <th>书名</th>
+                                <th>价格</th>
+                                <th>音频时长</th>
+                                <th>解读人</th>
+                                <th>内容简介</th>
+                                <th>出版社介绍</th>
+                                <th>音频简介</th>
+                                <th>解读人简介</th>
+                                <th>收听人数</th>
+                                <th>类型</th>
+                                <th>分类类型</th>
+                                <th>二级目录</th>
+                                <th>解读人照片</th>
+                                <th>音频图片</th>
+                                <th>音频</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            <tr th:each="list,memberStat:${listensList}">
+                                <td th:text="${list.getListenId()}"></td>
+                                <th width="30"><input type="checkbox" name="all"></th>
+                                <td th:text="${list.getListenSubtitle()}"></td>
+                                <td th:text="${list.getListenPrice()}"></td>
+                                <td th:text="${list.getListenAudioTime()}"></td>
+                                <td th:text="${list.getListenAuthor()}"></td>
+                                <td th:text="${list.getListenContent()}"></td>
+                                <td th:text="${list.getListenPublisherIntro()}"></td>
+                                <td th:text="${list.getListenAudioIntro()}"></td>
+                                <td th:text="${list.getListenAuthorValidity()}"></td>
+                                <td th:text="${list.getListenCount()}"></td>
+                                <td th:text="${list.getListenType()}"></td>
+                                <td th:text="${list.getType()}"></td>
+                                <td th:text="${list.getListenClassId()}"></td>
+
+                                <th style="width: 100px">
+                                    <img style="width: 100%"th:src="${list.getListenAuthorPhoto()}">
+                                </th>
+                                <th style="width: 100px">
+                                    <img style="width: 100%"th:src="${list.getListenImgUrl()}">
+                                </th>
+                                <th style="width: 100px">
+                                    <audio th:src="${list.getListenAudio()}" controls="controls"></audio>
+                                </th>
+                                <th>
+                                    <a th:href="@{findListenById(listenId=${list.getListenId()})}"><button type="button" class="btn btn-primary btn-xs  glyphicon glyphicon-pencil"></button></a>
+                                    <button type="button" class="btn btn-danger btn-xs" th:onclick="'delete11(listenId='+${list.getListenId()}+')'"><i class=" glyphicon glyphicon-remove"> </i></button>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr >
+                                <td colspan="19" align="center">
+                                    <ul class="pagination">
+                                        <li><a  href="/listen/loadAll?page=1&rows=5">首页</a></li>
+                                        <li ><a  th:href="@{/listen/loadAll(page=${page-1})}">上一页</a></li>
+                                        <li><a ><span th:text="'当前第'+ ${page} +'页'"> 当前第1页 </span></a></li>
+                                        <li><a href="#" th:href="@{/listen/loadAll(page=${page+1})}">下一页</a></li>
+                                        <li><a href="#" th:href="@{/listen/loadAll(page=${maxpage})}">尾页</a></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

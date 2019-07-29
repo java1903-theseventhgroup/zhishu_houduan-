@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.dao.AdministratorDao">
+    <select id="selectAll" resultType="administrator">
+        select * from administrator
+    </select>
+    <update id="updateAdmin" parameterType="administrator">
+        update administrator set name=#{name},pass=#{pass},positions=#{positions} where id=#{id}
+    </update>
+    <select id="selectRows" resultType="int">
+        select count(*) from administrator
+    </select>
+    <select id="checkName" resultType="administrator" parameterType="administrator">
+        select * from administrator where name=#{name} and pass=#{pass}
+    </select>
+    <insert id="addAdmin" parameterType="administrator">
+        insert into administrator values (default,#{name},#{pass},#{positions})
+    </insert>
+    <delete id="deleteAdmin" parameterType="int">
+        delete from administrator where id=#{id}
+    </delete>
+    <select id="selectOne" parameterType="int" resultType="administrator">
+        select * from administrator where id=#{id}
+    </select>
+    <select id="findAdminByName" parameterType="string" resultType="administrator">
+        select * from administrator where name=#{name}
+    </select>
+</mapper>

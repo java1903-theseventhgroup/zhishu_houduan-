@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.dao.CourseDao">
+        <resultMap id="rm" type="com.qf.domain.Course">
+            <id property="courseId" column="course_id"></id>
+            <result property="courseTitleImgurl" column="course_title_imgurl"></result>
+            <result property="courseSubtitle" column="course_subtitle"></result>
+            <result property="courseSummary" column="course_summary"></result>
+            <result property="courseAuthor" column="course_author"></result>
+            <result property="courseClassNum" column="course_class_num"></result>
+            <result property="courseSprice" column="course_sprice"></result>
+            <result property="courseStudyPeoples" column="course_study_peoples"></result>
+            <result property="courseImgurl" column="course_imgurl"></result>
+            <result property="courseOtherImgurl" column="course_other_imgurl"></result>
+            <result property="courseTeacherIntro" column="course_teacher_intro"></result>
+            <result property="courseFeatureIntroI" column="course_feature_intro_i"></result>
+            <result property="courseFeatureIntroII" column="course_feature_intro_ii"></result>
+            <result property="courseTitle" column="course_title"></result>
+            <result property="coursePeoples" column="course_peoples"></result>
+            <result property="courseTableImgurl" column="course_table_imgurl"></result>
+            <result property="coursePurchaseAttention" column="course_purchase_attention"></result>
+            <result property="courseCollege" column="course_college"></result>
+            <result property="courseUpdateTime" column="course_update_time"></result>
+            <result property="courseClassId" column="course_class_id"></result>
+            <result property="topImage" column="top_image"></result>
+            <result property="type" column="type"></result>
+            <result property="bottomImage" column="bottom_image"></result>
+            <result property="coursePurchaseAttentionTwo" column="course_purchase_attention_two"></result>
+            <result property="coursePurchaseAttentionThree" column="course_purchase_attention_three"></result>
+
+
+        </resultMap>
+
+
+    <insert id="inserCourse" parameterType="course">
+        insert into course(course_title_imgurl,course_subtitle,course_summary,course_author,course_class_num, course_sprice,course_study_peoples, course_imgurl,course_other_imgurl,course_teacher_intro,course_feature_intro_i,course_feature_intro_ii,course_title, course_peoples,course_table_imgurl,course_purchase_attention, course_college,course_update_time,course_class_id) values(#{courseTitleImgurl},#{courseSubtitle},#{courseSummary},#{courseAuthor},#{courseClassNum},#{courseSprice},#{courseStudyPeoples},#{courseImgurl},#{courseOtherImgurl},#{courseTeacherIntro},#{courseFeatureIntroI},#{courseFeatureIntroII},#{courseTitle},#{coursePeoples},#{courseTableImgurl},#{coursePurchaseAttention},#{courseCollege},#{courseUpdateTime},#{courseClassId})
+    </insert>
+    <!--修改-->
+    <select id="loadById" parameterType="int" resultMap="rm">
+         select * from course where course_id=#{courseId}
+    </select>
+
+    <update id="updateCourse" parameterType="course">
+        update course set course_title_imgurl=#{courseTitleImgurl},course_subtitle=#{courseSubtitle},course_summary=#{courseSummary},
+        course_author=#{courseAuthor},course_class_num=#{courseClassNum},course_sprice=#{courseSprice},course_study_peoples=#{courseStudyPeoples},
+        course_imgurl=#{courseImgurl},course_other_imgurl=#{courseOtherImgurl},course_teacher_intro=#{courseTeacherIntro},course_feature_intro_i=#{courseFeatureIntroI},
+        course_feature_intro_ii=#{courseFeatureIntroII},course_title=#{courseTitle},course_peoples=#{coursePeoples},course_table_imgurl=#{courseTableImgurl},
+        course_purchase_attention=#{coursePurchaseAttention},course_college=#{courseCollege},course_update_time=#{courseUpdateTime},
+        course_class_id=#{courseClassId},top_image=#{topImage},type=#{type},bottom_image=#{bottomImage},
+        course_purchase_attention_two=#{coursePurchaseAttentionTwo},course_purchase_attention_three=#{coursePurchaseAttentionThree}
+        where course_id=#{courseId}
+
+    </update>
+
+    <delete id="deleteCourse" parameterType="int">
+        delete from course where course_id=#{courseId}
+    </delete>
+
+    <update  id="uploadCourseTitleImgurl" parameterType="course">
+        update course set course_title_imgurl=#{courseTitleImgurl} where course_id=#{courseId}
+    </update>
+
+    <update  id="uploadCourseOtherImgurl" parameterType="course">
+        update course set course_other_imgurl=#{courseOtherImgurl} where course_id=#{courseId}
+    </update>
+    <update  id="uploadcourseImgurl" parameterType="course">
+        update course set course_imgurl=#{courseImgurl} where course_id=#{courseId}
+    </update>
+
+    <update  id="uploadCourseTableImgurl" parameterType="course">
+        update course set course_table_imgurl=#{courseTableImgurl} where course_id=#{courseId}
+    </update>
+    <!--查询总行数-->
+    <select id="selectRows" resultType="int">
+    select count(*) from course
+    </select>
+    <!-- 查询全部课程表   -->
+    <select id="findAll" resultMap="rm">
+        select * from course
+    </select>
+    <!--  查询课程下的学院表    -->
+    <select id="findByAbility" parameterType="String" resultMap="rm">
+    select * from course where course_college=#{courseCollege}
+    </select>
+    <!--  专题首页展示  -->
+    <select id="findHomePage" resultMap="rm">
+    select course_subtitle,course_imgurl,course_update_time from course order by course_update_time desc
+    </select>
+    <select id="findS22" resultMap="rm">
+        SELECT * FROM course WHERE course_class_id =(SELECT classification_id FROM classifications WHERE classification=#{classification})
+    </select>
+    <select id="findSujectsByName" resultMap="rm">
+         SELECT * FROM course WHERE course_class_id in (SELECT classification_id FROM classifications WHERE sub_id=(SELECT subject_id FROM subjects WHERE SUBJECT=#{SUBJECT}))
+    </select>
+
+
+
+</mapper>

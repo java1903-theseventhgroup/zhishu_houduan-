@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.dao.UserDao" >
+
+    <!--注册用户-->
+    <insert id="register" parameterType="com.qf.domain.User" >
+    insert into users ( username, password,useremail,status,code)
+    values (#{username,jdbcType=VARCHAR},md5(#{password,jdbcType=VARCHAR}), #{useremail,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER},#{code,jdbcType=INTEGER})
+  </insert>
+
+    <!--根据激活码code查询用户-->
+    <select id="checkCode" parameterType="String" resultType="com.qf.domain.User">
+    select * from users where code = #{code}
+  </select>
+
+    <!--激活账户，修改用户状态-->
+    <update id="updateUserStatus" parameterType="com.qf.domain.User">
+    update users set status=1,money=0,code=null where id=#{id}
+  </update>
+
+    <!--登录,根据 status=1 进行查询-->
+    <select id="loginUser" resultType="com.qf.domain.User" >
+    select * from users where (username=#{username} and password=md5(#{password}) and status=1) or (useremail=#{useremail} and password=md5(#{password}) and status=1)
+  </select>
+
+    <!--查询用户名是否被占用-->
+    <select id="findUser" parameterType="com.qf.domain.User" resultType="int">
+        select COUNT(*) from users where username=#{username}
+    </select>
+
+    <!--根据用户ID查询用户的余额-->
+    <select id="findUserMoney" resultType="double" parameterType="int">
+        select money from users where id=#{id}
+    </select>
+    <!--根据前端的ID和钱数，给当前用户充值-->
+    <update id="findUserMoneys" parameterType="com.qf.domain.User">
+        UPDATE users SET money=money+#{money} WHERE id=#{id}
+    </update>
+   <!-- 后台查询所有用户-->
+    <select id="findAllUser" resultType="com.qf.domain.User">
+        select * from users
+    </select>
+    <!--查询总行数-->
+    <select id="selectRows" resultType="int">
+        select count(*) from users
+    </select>
+   <!-- 根据前端的ID和钱数，给当前用户减钱（支付）-->
+    <update id="findUserJian" parameterType="com.qf.domain.User">
+        UPDATE users SET money=money-#{money} WHERE id=#{id}
+    </update>
+    <!--根据用户名和邮箱，查询用户后，发送邮件，修改密码-->
+    <select id="findUserByName" parameterType="com.qf.domain.User" resultType="int">
+        select COUNT(*) from users where username=#{username} and useremail=#{useremail}
+    </select>
+    <!--根据username查到code并且修改-->
+    <update id="addCode" parameterType="com.qf.domain.User">
+        update users set code=#{code} where username=#{username}
+    </update>
+    <!--根据code修改对应用户的密码-->
+    <update id="uptPassWord" parameterType="com.qf.domain.User">
+        update users set password=md5(#{password}) where code=#{code}
+    </update>
+
+    <!--根据ID查询用户信息（后台接口）-->
+    <select id="selUser" parameterType="int" resultType="com.qf.domain.User">
+        select * from users where id=#{id}
+    </select>
+    <!--修改用户信息（后台接口）-->
+    <update id="updateUser" parameterType="com.qf.domain.User">
+        update users set status=#{status} where id=#{id}
+    </update>
+</mapper>
